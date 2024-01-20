@@ -18,10 +18,12 @@ type INewsRepository interface {
 		)
 	GetAll(
 		ctx context.Context,
+
 		query utils.PaginationQuery,
 		) (
 		*models.NewsList,
 		error,
+
 		)
 	Update(
 		ctx context.Context,

@@ -8,6 +8,7 @@ const (
 		RETURNING id
 		`
 
+
 	NewsGetById = `	SELECT
 		id,
 		title,
@@ -21,11 +22,13 @@ WHERE id=CAST($1 AS INT) AND deletedAt IS NULL`
 	NewsGetAll = `
 SELECT
 	id,
+
 	title,
 	content,
 	author,
 	category,
 	publication_date
+
 FROM news 
 WHERE deletedAt IS NULL
 OFFSET $1
@@ -33,6 +36,7 @@ LIMIT $2
 `
 	NewsCount = `
 	SELECT COUNT(id) FROM news WHERE 1=1
+
 `
 	NewsUpdate = `
 	Update news
@@ -49,3 +53,4 @@ SET deletedAt=$2
 WHERE id=CAST($1 AS INT)
 `
 )
+

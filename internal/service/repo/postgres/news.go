@@ -50,7 +50,9 @@ func (r *newsRepository) GetByID(
 		NewsGetById,
 		ID,
 	).Scan(
+
 		&news.ID,
+
 		&news.Title,
 		&news.Content,
 		&news.CreatedBy,
@@ -99,9 +101,11 @@ func (r *newsRepository) GetAll(
 		return nil, err
 	}
 	defer rows.Close()
+
 	news := make([]*models.News, 0, query.GetSize())
 	for rows.Next() {
 		new := &models.News{}
+
 		rows.Scan(
 			&new.ID,
 			&new.Title,
@@ -112,6 +116,7 @@ func (r *newsRepository) GetAll(
 		)
 		news = append(news, new)
 	}
+
 	return &models.NewsList{
 		TotalCount: count,
 		TotalPages: utils.GetTotalPages(count, query.GetSize()),
@@ -120,6 +125,7 @@ func (r *newsRepository) GetAll(
 		HasMore:    utils.GetHasMore(query.GetPage(), count, query.GetSize()),
 		News:       news,
 	}, nil
+
 }
 func (r *newsRepository) Update(
 	ctx context.Context,
@@ -135,6 +141,7 @@ func (r *newsRepository) Update(
 		r.logger.Error("repo.news.update error while transaction begin:", err)
 		return err
 	}
+
 	res, execErr := tx.ExecContext(
 		ctx,
 		NewsUpdate,
@@ -176,9 +183,11 @@ func (r *newsRepository) Delete(
 
 	res, execErr := tx.ExecContext(
 		ctx,
+
 		NewsDelete,
 		id,
 		time.Now().Format("2006-01-02"),
+
 	)
 	if execErr != nil {
 		r.logger.Error(
@@ -193,7 +202,6 @@ func (r *newsRepository) Delete(
 		_ = tx.Rollback()
 		return sql.ErrNoRows
 	}
-	
 	return nil
 
 }
