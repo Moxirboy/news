@@ -1,0 +1,20 @@
+linters-settings:
+  enable-all: true
+  disable:
+    - gochecknoglobals
+
+run:
+  deadline: 5m
+  tests: false
+  skip-dirs-use-default: true
+
+issues:
+  exclude:
+    - package-comments
+
+linters:
+  enable:
+    - golint
+    - gosec
+    - govet
+
