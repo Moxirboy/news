@@ -8,3 +8,11 @@ type News struct{
 	By
 	At
 }
+type NewsList struct {
+	TotalCount int
+	TotalPages int
+	Page int
+	Size int
+	HasMore bool
+	News []*News
+}

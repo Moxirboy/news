@@ -31,6 +31,6 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: app_db
+      POSTGRES_DB: news
     ports:
       - "5432"
