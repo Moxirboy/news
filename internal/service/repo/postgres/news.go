@@ -6,6 +6,8 @@ import (
 	"news/internal/models"
 	"news/internal/service/repo"
 	"news/pkg/logger"
+	"news/pkg/utils"
+	"time"
 )
 
 type newsRepository struct {
@@ -48,6 +50,9 @@ func (r *newsRepository) GetByID(
 		NewsGetById,
 		ID,
 	).Scan(
+
+		&news.ID,
+
 		&news.Title,
 		&news.Content,
 		&news.CreatedBy,
@@ -62,22 +67,45 @@ func (r *newsRepository) GetByID(
 }
 func (r *newsRepository) GetAll(
 	ctx context.Context,
+	query utils.PaginationQuery,
 ) (
-	news []models.News,
-	err error,
+	*models.NewsList,
+	error,
 ) {
+	count := 0
+	if err := r.db.QueryRowContext(ctx,
+		NewsCount).Scan(
+		&count); err != nil {
+		r.logger.Error("repo.news.GetAll Error:", err)
+		return nil, err
+	}
+	if count == 0 {
+		return &models.NewsList{
+			TotalCount: count,
+			TotalPages: utils.GetTotalPages(count, query.GetSize()),
+			Page:       query.GetPage(),
+			Size:       query.GetSize(),
+			HasMore:    utils.GetHasMore(query.GetPage(), count, query.GetSize()),
+			News:       make([]*models.News, 0),
+		}, nil
+	}
+
 	rows, err := r.db.QueryContext(
 		ctx,
 		NewsGetAll,
-		10,
+		query.GetOffset(),
+		query.GetLimit(),
 	)
 	if err != nil {
 		r.logger.Error("repo.news.GetAll Error: ", err)
 		return nil, err
 	}
 	defer rows.Close()
+
+	news := make([]*models.News, 0, query.GetSize())
 	for rows.Next() {
-		new := models.News{}
+		new := &models.News{}
+
 		rows.Scan(
 			&new.ID,
 			&new.Title,
@@ -88,7 +116,16 @@ func (r *newsRepository) GetAll(
 		)
 		news = append(news, new)
 	}
-	return news, nil
+
+	return &models.NewsList{
+		TotalCount: count,
+		TotalPages: utils.GetTotalPages(count, query.GetSize()),
+		Page:       query.GetPage(),
+		Size:       query.GetSize(),
+		HasMore:    utils.GetHasMore(query.GetPage(), count, query.GetSize()),
+		News:       news,
+	}, nil
+
 }
 func (r *newsRepository) Update(
 	ctx context.Context,
@@ -112,7 +149,6 @@ func (r *newsRepository) Update(
 		news.Content,
 		news.CreatedBy,
 		news.Category,
-		news.UpdatedAt,
 		news.ID,
 	)
 	if execErr != nil {
@@ -147,8 +183,11 @@ func (r *newsRepository) Delete(
 
 	res, execErr := tx.ExecContext(
 		ctx,
-		NewsUpdate,
+
+		NewsDelete,
 		id,
+		time.Now().Format("2006-01-02"),
+
 	)
 	if execErr != nil {
 		r.logger.Error(

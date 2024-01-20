@@ -16,7 +16,7 @@ var (
 )
 func DB(cfg *configs.Postgres) (*sql.DB,error){
 	var err error
-	once.Do(func(){
+
 		psqlString := fmt.Sprintf(
 			`host=%s port=%d user=%s password=%s dbname=%s sslmode=disable`,
 			cfg.Host,
@@ -26,7 +26,7 @@ func DB(cfg *configs.Postgres) (*sql.DB,error){
 			cfg.Database,
 			)
 		instance, err = sql.Open("pgx", psqlString)
-	})
+
 	
 	if err != nil {
 		return nil, errors.Wrap(err, "pgx.Connect")

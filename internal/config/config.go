@@ -44,7 +44,7 @@ type (
 		Host     string `env:"POSTGRES_HOST"`
 		Password string `env:"POSTGRES_PASSWORD"`
 		User     string `env:"POSTGRES_USER"`
-		Database string `env:"POSTGRES_DB"`
+		Database string `env:"POSTGRES_DATABASE"`
 		PoolMax  int    `env:"POSTGRES_POOL_MAX"`
 	}
 )

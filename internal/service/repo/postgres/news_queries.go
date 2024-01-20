@@ -7,26 +7,36 @@ const (
 		VALUES($1,$2,$3,$4,$5)
 		RETURNING id
 		`
-	NewsGetById = `
-	SELECT
+
+
+	NewsGetById = `	SELECT
+		id,
+		title,
+		content,
+		author,
+		category,
+		publication_date
+	FROM news
+WHERE id=CAST($1 AS INT) AND deletedAt IS NULL`
+
+	NewsGetAll = `
+SELECT
+	id,
+
 	title,
 	content,
 	author,
 	category,
 	publication_date
-	FROM news WHERE id=$1
-    WHERE deletedAt NULL
-	`
-	NewsGetAll = `
-SELECT
-id,
-title,
-content,
-author,
-category,
-publication_date
-FROM news LIMIT 10 OFFSET $1
-WHERE deletedAt NULL
+
+FROM news 
+WHERE deletedAt IS NULL
+OFFSET $1
+LIMIT $2
+`
+	NewsCount = `
+	SELECT COUNT(id) FROM news WHERE 1=1
+
 `
 	NewsUpdate = `
 	Update news
@@ -35,11 +45,12 @@ content=$2,
 author=$3,
 category=$4,
 updatedAt=CURRENT_TIMESTAMP
-where id=$5
+where id=CAST($5 AS INT)
 	`
 	NewsDelete = `
 	UPDATE news
-SET DeletedAt=CURRENT_TIMESTAMP
-WHERE id=$1
+SET deletedAt=$2
+WHERE id=CAST($1 AS INT)
 `
-	)
+)
+

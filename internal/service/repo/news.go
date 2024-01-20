@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"news/internal/models"
+	"news/pkg/utils"
 )
 
 type INewsRepository interface {
@@ -17,9 +18,12 @@ type INewsRepository interface {
 		)
 	GetAll(
 		ctx context.Context,
+
+		query utils.PaginationQuery,
 		) (
-		news []models.News,
-		err error,
+		*models.NewsList,
+		error,
+
 		)
 	Update(
 		ctx context.Context,
