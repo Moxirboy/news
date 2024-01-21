@@ -26,5 +26,5 @@ func SetUpHandlerV1(
 		group,
 		uc.NewsUseCase(),
 		)
-
+	v1.
 }

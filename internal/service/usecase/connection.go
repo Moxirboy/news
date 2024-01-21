@@ -8,6 +8,7 @@ import (
 
 type IUseCase interface {
 	NewsUseCase() INewsUsecase
+	BlogUseCase() IBlogUsecase
 }
 type UseCase struct {
 	connections map[string]interface{}
@@ -15,6 +16,7 @@ type UseCase struct {
 
 const (
 	_newsUseCase = "news_use_case"
+	_blogUseCase = "blog_use_case"
 )
 
 func New(
@@ -26,10 +28,17 @@ func New(
 		log,
 		postgres.NewNewsRepo(db,log),
 		)
+	connections[_blogUseCase] =NewblogUseCase(
+		log,
+		postgres.NewBlogRepo(db,log),
+		)
 	return &UseCase{
 		connections: connections,
 	}
 }
 func (c *UseCase) NewsUseCase() INewsUsecase {
 	return c.connections[_newsUseCase].(INewsUsecase)
+}
+func (c *UseCase) BlogUseCase() IBlogUsecase {
+	return c.connections[_blogUseCase].(IBlogUsecase)
 }
