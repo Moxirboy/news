@@ -18,7 +18,7 @@ func NewCommentHandler(
 	handler:=commentHandler{
 		CommentUseCase: CommentUseCase,
 		}
-		news:=g.Group("/blog")
+		news:=g.Group("/comment")
 		news.POST("/create",handler.create)
 		news.GET("/getall/:id",handler.GetAll)
 		news.PUT("/update/:id",handler.update)
