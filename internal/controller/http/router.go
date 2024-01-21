@@ -26,5 +26,8 @@ func SetUpHandlerV1(
 		group,
 		uc.NewsUseCase(),
 		)
-	v1.
+	v1.NewBlogHandler(
+		group,
+		uc.BlogUseCase(),
+		)
 }

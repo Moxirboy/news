@@ -18,7 +18,7 @@ func NewBlogHandler(
 	handler:=blogHandler{
 		BlogUseCase: BlogUseCase,
 		}
-		news:=g.Group("/news")
+		news:=g.Group("/blog")
 		news.POST("/create",handler.create)
 		news.GET("/get/:id",handler.GetOneById)
 		news.GET("/getall/:id",handler.GetAll)
