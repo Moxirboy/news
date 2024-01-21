@@ -61,7 +61,7 @@ func (h *blogHandler) GetAll(c *gin.Context){
 		c.JSON(errors.ErrorResponse(err))
 	}
 	BlogList,err:=h.BlogUseCase.GetAll(c,*pq)
-	blogList:=ToNewsResponseList(BlogList)
+	blogList:=ToBlogResponseList(BlogList)
 	c.JSON(http.StatusOK,blogList)
 }
 func (h *blogHandler) update(c *gin.Context){

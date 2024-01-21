@@ -30,4 +30,8 @@ func SetUpHandlerV1(
 		group,
 		uc.BlogUseCase(),
 		)
+	v1.NewCommentHandler(
+		group,
+		uc.CommentUseCase(),
+		)
 }
